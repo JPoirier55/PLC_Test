@@ -1,0 +1,32 @@
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+td:nth-child(even) {
+    width: 10%;
+    background: #f1f1f1
+}
+
+.circle {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    border: 1px solid gray;
+    background-color: lightgrey;
+}
+
+.togglestyle {
+    border: 1px solid gray;
+}
+
+#polling_div {
+    color: gray;
+    padding: 10px 0;
+    margin-left: 25px;
+    font-weight: bold;
+}
+.nav-item{
+    padding-left: 25px;
+}

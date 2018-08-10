@@ -1,0 +1,122 @@
+{% extends "index.html" %}
+{% load static %}
+{% block content %}
+
+    <table style="width:100%">
+        <tr>
+            <th>Inputs</th>
+            {% for input_name in input_name_list %}
+                {% if forloop.counter0|divisibleby:10 %}
+                    </tr>
+                    <tr>
+                {% endif %}
+                <td>{{ input_name }}</td>
+                <td>
+                    <input id="ickb{{ forloop.counter0 }}" type="checkbox" data-toggle="toggle"
+                           onchange="post({{ forloop.counter0 }})" data-onstyle="info" data-offstyle="default"
+                           data-style="togglestyle">
+                </td>
+            {% endfor %}
+            </tr>
+        <tr>
+
+            <th>Outputs</th>
+            {% for output_name in output_name_list %}
+                {% if forloop.counter0|divisibleby:10 %}
+                    </tr>
+                    <tr>
+                {% endif %}
+                <td>{{ output_name }}</td>
+                <td>
+                    <div class="circle" id="output_{{ forloop.counter0 }}"></div>
+                </td>
+            {% endfor %}
+            </tr>
+    </table>
+    <script>
+
+    </script>
+
+    <script type="text/javascript">
+        for (input in {{ input_name_list|safe }}) {
+            $('#ickb' + input).bootstrapToggle();
+        }
+
+        function get() {
+            $.ajax({
+                type: "GET",
+                url: "/api/get_data",
+                success: function (response) {
+                    console.log(response['test']);
+                    console.log(response['test2']);
+                }
+            })
+        }
+
+        function post(switch_num) {
+            ckb = $("#ickb" + switch_num).is(':checked');
+            ckb_state = 0;
+            if (ckb) {
+                ckb_state = 1;
+            }
+            console.log("Flipped " + switch_num);
+            $.ajax({
+                type: "POST",
+                url: "/api/set_data",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    switch: switch_num,
+                    state: ckb_state,
+                    plc_type: "{{ plc_type }}"
+                },
+                success: function (response) {
+                    console.log(response);
+                }
+            })
+        }
+
+        var interval;
+
+        function start_polling() {
+            $('#polling_div').css('color', 'green');
+            interval = setInterval(function () {
+                arr = [];
+                $.when(
+                    $.ajax({
+                        type: "GET",
+                        url: "/api/get_data",
+                        data: {
+                            plc_type: "{{ plc_type }}"
+                        },
+                        success: function (response) {
+                            {#var data = JSON.parse(response);#}
+                            data = response;
+                            console.log(data)
+                        }
+                    }).then(function () {
+                        for(key in data){
+                            if (data[key] == 1) {
+                                $('#' + key).css('background-color', 'green');
+                            } else {
+                                $('#'+key).css('background-color', 'lightgray');
+                            }
+                        }
+                        {#var i;#}
+                        {#for (i = 0; i < arr.length; i++) {#}
+                        {#    if (arr[i] == 1) {#}
+                        {#        $('#output_' + i).css('background-color', 'green');#}
+                        {#    } else {#}
+                        {#        $('#output_' + i).css('background-color', 'lightgray');#}
+                        {#    }#}
+                        {#}#}
+                    }))
+            }, 1000);
+        }
+
+        function stop_polling() {
+            $('#polling_div').css('color', 'gray');
+            clearInterval(interval);
+        }
+    </script>
+
+{% endblock %}

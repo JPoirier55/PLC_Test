@@ -1,0 +1,30 @@
+
+
+
+        <tr>
+            <td>All Inputs Off/On</td>
+            <td>
+                <input id="ickb_all" type="checkbox" data-toggle="toggle"
+                       onchange="post(-1)" data-onstyle="success" data-offstyle="default"
+                       data-style="togglestyle">
+            </td>
+        </tr>
+        <script>
+         if (switch_num == '-1') {
+             all_ckb = $("#ickb_all").is(':checked');
+             all_ckb_state = 0;
+             if (all_ckb) {
+                 all_ckb_state = 1;
+             }
+             if (all_ckb_state == 0) {
+                 for (input in {{ input_name_list|safe }}) {
+                     $('#ickb' + input).bootstrapToggle('off');
+                 }
+             }
+             else {
+                 for (input in {{ input_name_list|safe }}) {
+                     $('#ickb' + input).bootstrapToggle('on');
+                 }
+             }
+         }
+         </script>
