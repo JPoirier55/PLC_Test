@@ -9,3 +9,4 @@ class PlcTestAppConfig(AppConfig):
 
     def ready(self):
         print("GPIO setting up...")
+
