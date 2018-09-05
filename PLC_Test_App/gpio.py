@@ -40,7 +40,8 @@ class I2CReader:
         self.bus.write_byte_data(self.DEVICES[1], self.OLATB, output2)
 
     def clear_outputs(self):
-        self.bus.write_byte_data(self.DEVICE, self.OLATB, 0xFF)
+        self.bus.write_byte_data(self.DEVICES[0], self.OLATB, 0xFF)
+        self.bus.write_byte_data(self.DEVICES[1], self.OLATB, 0xFF)
 
     def fetch_test_file(self, test_number):
         with open('testdata_'+str(test_number)+'.json') as f:
@@ -62,35 +63,4 @@ if __name__ == '__main__':
     file = i2c.fetch_test_file('3')
     i2c.run_outputs(file)
 
-    # in_arr = ['0', '1', '0', '1', '0', '1', '1', '1']
-    # bin_string = ''
-    # for bn in in_arr:
-    #     bin_string += bn
-    # print(bin_string)
-    # output = bin(int(bin_string, 2))
-    # print(output)
-    # setup()
-    # filedata = fetch_test_file(3)
-    # run_outputs(filedata)
-    # # try:
-    # #     while True:
-    # #         read_inputs()
-    # # except KeyboardInterrupt:
-    # #     print('interrupted!')
-    # cleanup()
-    # Set output all 7 output bits to 0
-    # bus.write_byte_data(DEVICE, OLATA, 0)
 
-    # time.sleep(1)
-    # bus.write_byte_data(DEVICE, OLATA, 1)
-    # bus = smbus.SMBus(1)
-    # bus.write_byte_data(0x20, 0x00, 0xF0)
-    # while True:
-    #
-    #     # Read state of GPIOA register
-    #     MySwitch = bus.read_byte_data(0x20, 0x12)
-    #     t = bin(MySwitch)
-    #     for b in t:
-    #         print(b)
-    #     print(MySwitch)
-    #     time.sleep(1)

@@ -1,0 +1,33 @@
+{% extends "index.html" %}
+{% load static %}
+
+{% block navbar %}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto" >
+            <li class="nav-item">
+                <div>Testing</div>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <div style="margin: 25px;">
+        <button onclick="run_test()" type="button" class="btn btn-danger">Run Test</button>
+    </div>
+
+    <script type="text/javascript">
+
+        function run_test() {
+            $.ajax({
+                type: "GET",
+                url: "/api/run_test",
+                success: function (response) {
+                    console.log(response);
+                }
+            })
+        }
+    </script>
+
+{% endblock %}

@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.shortcuts import HttpResponse
 
 import json, os
-from collections import OrderedDict
 from PLC_Test_App import apps
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -42,6 +41,13 @@ def index(request):
                                          'plc_type': plc_type})
 
 
+def testing(request):
+    return render(request, 'testing.html')
+
+
+# ------------- API Methods ---------------- #
+
+
 def get_data(request):
     i2c = apps.I2C_OBJ
     arr = i2c.read_inputs()
@@ -52,7 +58,6 @@ def set_data(request):
     data = json.loads(request.POST.get('data_out', ''))
     set_arr = []
     for i in range(len(data)):
-        input = data[str(i)]
         if data[str(i)]:
             set_arr.append(0)
         else:
