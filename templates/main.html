@@ -2,6 +2,10 @@
 {% load static %}
 {% block content %}
 
+    <div style="margin: 25px;">
+        <button onclick="run_test()" type="button" class="btn btn-danger">Run Test</button>
+    </div>
+
     <table style="width:100%">
         <tr>
             <th>Inputs</th>
@@ -13,7 +17,7 @@
                 <td>{{ input_name }}</td>
                 <td>
                     <input id="ickb{{ forloop.counter0 }}" type="checkbox" data-toggle="toggle"
-                           onchange="post({{ forloop.counter0 }})" data-onstyle="info" data-offstyle="default"
+                           onchange="post()" data-onstyle="info" data-offstyle="default"
                            data-style="togglestyle">
                 </td>
             {% endfor %}
@@ -38,35 +42,37 @@
     </script>
 
     <script type="text/javascript">
+        input_list = [];
         for (input in {{ input_name_list|safe }}) {
             $('#ickb' + input).bootstrapToggle();
+            input_list.push('#ickb' + input);
         }
 
-        function get() {
+        function run_test() {
             $.ajax({
                 type: "GET",
-                url: "/api/get_data",
+                url: "/api/run_test",
                 success: function (response) {
-                    console.log(response['test']);
-                    console.log(response['test2']);
+                    console.log(response);
                 }
             })
         }
 
-        function post(switch_num) {
-            ckb = $("#ickb" + switch_num).is(':checked');
-            ckb_state = 0;
-            if (ckb) {
-                ckb_state = 1;
+        function post() {
+            json_obj = {};
+            arr = [];
+            str_1 = "";
+            for (i = 0; i < input_list.length; i++) {
+                state = $(input_list[i]).is(':checked');
+                json_obj[i] = state;
             }
-            console.log("Flipped " + switch_num);
+            console.log(json_obj);
             $.ajax({
                 type: "POST",
                 url: "/api/set_data",
                 data: {
                     csrfmiddlewaretoken: '{{ csrf_token }}',
-                    switch: switch_num,
-                    state: ckb_state,
+                    data_out: JSON.stringify(json_obj),
                     plc_type: "{{ plc_type }}"
                 },
                 success: function (response) {
@@ -89,27 +95,19 @@
                             plc_type: "{{ plc_type }}"
                         },
                         success: function (response) {
-                            {#var data = JSON.parse(response);#}
                             data = response;
-                            console.log(data)
                         }
                     }).then(function () {
-                        for(key in data){
-                            if (data[key] == 1) {
-                                $('#' + key).css('background-color', 'green');
+                        for (i = 0; i < data.length; i++) {
+                            console.log(data[i]);
+                            if (data[i] == 1) {
+                                $('#output_' + i).css('background-color', 'green');
                             } else {
-                                $('#'+key).css('background-color', 'lightgray');
+                                $('#output_' + i).css('background-color', 'lightgray');
                             }
                         }
-                        {#var i;#}
-                        {#for (i = 0; i < arr.length; i++) {#}
-                        {#    if (arr[i] == 1) {#}
-                        {#        $('#output_' + i).css('background-color', 'green');#}
-                        {#    } else {#}
-                        {#        $('#output_' + i).css('background-color', 'lightgray');#}
-                        {#    }#}
-                        {#}#}
-                    }))
+                    })
+                )
             }, 1000);
         }
 

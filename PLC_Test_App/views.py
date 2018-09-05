@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
+
 import json, os
+from collections import OrderedDict
+from PLC_Test_App import apps
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -13,9 +16,9 @@ def index(request):
     output_name_list = []
     if plc_type == 'siem':
         input_list = [0, 1, 2, 3, 4, 5, 6, 7]
-        input_name_list = ['I1', 'I2', 'I3', 'I4', 'I5', 'I6', 'I7', 'I8', 'I9']
+        input_name_list = ['I1', 'I2', 'I3', 'I4', 'I5', 'I6', 'I7', 'I8']
         output_list = [0, 1, 2, 3]
-        output_name_list = ['Q1', 'Q2', 'Q3', 'Q4']
+        output_name_list = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8']
     if plc_type == 'ab':
         input_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
         input_name_list = ['I:100', 'I:101', 'I:102', 'I:103', 'I:104', 'I:105', 'I:106',
@@ -40,29 +43,28 @@ def index(request):
 
 
 def get_data(request):
-    plc_type = request.GET.get('plc_type', '')
-    print(BASE_DIR + '/' + plc_type + '_outputs.json')
-    with open(BASE_DIR + '/' + plc_type + '_outputs.json', 'r') as f:
-        data = json.load(f)
-    return HttpResponse(json.dumps(data), content_type="application/json")
+    i2c = apps.I2C_OBJ
+    arr = i2c.read_inputs()
+    return HttpResponse(arr)
 
 
 def set_data(request):
-    switch_num = request.POST.get('switch', '')
-    switch_state = request.POST.get('state', '')
-    plc_type = request.POST.get('plc_type', '')
-    if int(switch_num) >= 0:
-        print('Sw: ' + switch_num + "  State: " + switch_state)
-        print(BASE_DIR + '/' + plc_type + '_testdata.json')
-        with open(BASE_DIR + '/' + plc_type + '_testdata.json', 'r') as f:
-            data = json.load(f)
-            f.close()
-        with open(BASE_DIR + '/' + plc_type + '_testdata.json', 'w') as f:
-            data['input_' + str(switch_num)] = int(switch_state)
-            f.write(json.dumps(data))
-            f.close()
-    return HttpResponse()
+    data = json.loads(request.POST.get('data_out', ''))
+    set_arr = []
+    for i in range(len(data)):
+        input = data[str(i)]
+        if data[str(i)]:
+            set_arr.append(0)
+        else:
+            set_arr.append(1)
+    i2c = apps.I2C_OBJ
+    i2c.write_outputs(set_arr)
+    return HttpResponse(set_arr)
 
 
 def run_test(request):
-    return render(request, 'index.html')
+    i2c = apps.I2C_OBJ
+    test_file = i2c.fetch_test_file('3')
+    i2c.run_outputs(test_file)
+    arr = i2c.read_inputs()
+    return HttpResponse("complete")

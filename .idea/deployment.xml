@@ -5,7 +5,7 @@
       <paths name="rpi">
         <serverdata>
           <mappings>
-            <mapping deploy="/home/pi/python_PLC_tester" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/home/pi/python_PLC_tester/PLC_Test" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
