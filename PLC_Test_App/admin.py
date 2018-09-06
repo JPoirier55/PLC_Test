@@ -1,3 +1,7 @@
 from django.contrib import admin
+from PLC_Test_App.models import *
 
-# Register your models here.
+admin.site.register(Test)
+admin.site.register(TestCase)
+admin.site.register(TestCaseInput)
+admin.site.register(TestCaseResult)

@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
+from PLC_Test_App.models import Test
 
 import json, os
 from PLC_Test_App import apps
@@ -13,36 +14,46 @@ def index(request):
     input_name_list = []
     output_list = []
     output_name_list = []
-    if plc_type == 'siem':
-        input_list = [0, 1, 2, 3, 4, 5, 6, 7]
-        input_name_list = ['I1', 'I2', 'I3', 'I4', 'I5', 'I6', 'I7', 'I8']
-        output_list = [0, 1, 2, 3]
-        output_name_list = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8']
-    if plc_type == 'ab':
-        input_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-        input_name_list = ['I:100', 'I:101', 'I:102', 'I:103', 'I:104', 'I:105', 'I:106',
-                           'I:107', 'I:108', 'I:109', 'I:110', 'I:111', 'I:112', 'I:113',
-                           'I:114', 'I:115']
-        output_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-        output_name_list = ['O:100', 'O:101', 'O:102', 'O:103', 'O:104', 'O:105', 'O:106',
-                            'O:107', 'O:108', 'O:109', 'O:110', 'O:111', 'O:112', 'O:113',
-                            'O:114', 'O:115']
-    if plc_type == 'unitr':
-        input_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
-        input_name_list = ['I0', 'I1', 'I2', 'I3', 'I4', 'I5', 'I6', 'I7', 'I8', 'I9', 'I10',
-                           'I11', 'I12', 'I13', 'I14', 'I15', 'I16', 'I17', 'I18', 'I19']
-        output_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-        output_name_list = ['O0', 'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'O9',
-                            'O10', 'O11', 'O12', 'O13', 'O14', 'O15', 'O16']
-    return render(request, 'main.html', {'input_list': input_list,
-                                         'input_name_list': input_name_list,
-                                         'output_list': output_list,
+    # if plc_type == 'siem':
+    #     input_list = [0, 1, 2, 3, 4, 5, 6, 7]
+    #     input_name_list = ['I1', 'I2', 'I3', 'I4', 'I5', 'I6', 'I7', 'I8']
+    #     output_list = [0, 1, 2, 3]
+    #     output_name_list = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8']
+    # if plc_type == 'ab':
+    #     input_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    #     input_name_list = ['I:100', 'I:101', 'I:102', 'I:103', 'I:104', 'I:105', 'I:106',
+    #                        'I:107', 'I:108', 'I:109', 'I:110', 'I:111', 'I:112', 'I:113',
+    #                        'I:114', 'I:115']
+    #     output_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    #     output_name_list = ['O:100', 'O:101', 'O:102', 'O:103', 'O:104', 'O:105', 'O:106',
+    #                         'O:107', 'O:108', 'O:109', 'O:110', 'O:111', 'O:112', 'O:113',
+    #                         'O:114', 'O:115']
+    # if plc_type == 'unitr':
+    input_name_list = ['I0', 'I1', 'I2', 'I3', 'I4', 'I5', 'I6', 'I7', 'I8', 'I9', 'I10', 'I11', 'I12', 'I13', 'I14',
+                       'I15', 'I16', 'I17', 'I18', 'I19', 'I20', 'I21', 'I22', 'I23', 'I24', 'I25', 'I26', 'I27', 'I28',
+                       'I29', 'I30', 'I31']
+    # io_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+    #            18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+    output_name_list = ['O0', 'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'O9', 'O10', 'O11', 'O12', 'O13', 'O14',
+                        'O15', 'O16', 'O17', 'O18', 'O19', 'O20', 'O21', 'O22', 'O23', 'O24', 'O25', 'O26', 'O27',
+                        'O28', 'O29', 'O30', 'O31']
+    return render(request, 'main.html', {'input_name_list': input_name_list,
                                          'output_name_list': output_name_list,
                                          'plc_type': plc_type})
 
 
 def testing(request):
-    return render(request, 'testing.html')
+    t = Test.objects.all()
+    for r in t:
+        print(r.testcase_set.all())
+        for i in r.testcase_set.all():
+            for u in i.testcaseresult_set.all():
+                print(u.test_case)
+                print(u.test_input)
+                print(u.test_case_id)
+            print(i.testcaseresult_set.all())
+            print(i.testcaseinput_set.all())
+    return render(request, 'testing.html', {"obj": t})
 
 
 # ------------- API Methods ---------------- #

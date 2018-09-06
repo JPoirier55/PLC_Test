@@ -1,11 +1,10 @@
 td, th {
     border: 1px solid #dddddd;
     text-align: left;
-    padding: 8px;
+    /*padding: 1%;*/
 }
 
-td:nth-child(even) {
-    width: 10%;
+td:nth-child(even) {;
     background: #f1f1f1
 }
 
@@ -23,7 +22,7 @@ td:nth-child(even) {
 
 #polling_div {
     color: gray;
-    padding: 10px 0;
+    /*padding: 10px 0;*/
     margin-left: 25px;
     font-weight: bold;
 }

@@ -4,14 +4,6 @@
 {% block navbar %}
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto" >
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle " data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">PLC Type</a>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="/?plc_type=unitr">Unitronics</a>
-                    <a class="dropdown-item" href="/?plc_type=ab">Allen Bradley</a>
-                    <a class="dropdown-item" href="/?plc_type=siem">Siemens</a>
-                </div>
-            </li>
             <li class="nav-item">
                 <button onclick="start_polling(1)" type="button" class="btn btn-info">Start Polling</button>
             </li>
@@ -31,11 +23,11 @@
         <button onclick="run_test()" type="button" class="btn btn-danger">Run Test</button>
     </div>
 
-    <table style="width:100%">
+    <table class="container-fluid">
         <tr>
             <th>Inputs</th>
             {% for input_name in input_name_list %}
-                {% if forloop.counter0|divisibleby:10 %}
+                {% if forloop.counter0|divisibleby:8 %}
                     </tr>
                     <tr>
                 {% endif %}
@@ -51,7 +43,7 @@
 
             <th>Outputs</th>
             {% for output_name in output_name_list %}
-                {% if forloop.counter0|divisibleby:10 %}
+                {% if forloop.counter0|divisibleby:8 %}
                     </tr>
                     <tr>
                 {% endif %}

@@ -6,7 +6,7 @@ import smbus
 class I2CReader:
     def __init__(self):
         self.bus = smbus.SMBus(1)
-        self.DEVICES = [0x20, 0x21]  # Device address (A0-A2)
+        self.DEVICES = [0x20, 0x21, 0x22, 0x23]  # Device address (A0-A2)
         self.IODIRA = 0x00  # Pin direction register
         self.IODIRB = 0x01  # Pin direction register
         self.OLATA = 0x14
@@ -34,17 +34,19 @@ class I2CReader:
         bin_string = ''
         for bn in input_array:
             bin_string += str(bn)
-        output1 = int(bin_string[:7], 2)
-        output2 = int(bin_string[7:], 2)
-        self.bus.write_byte_data(self.DEVICES[0], self.OLATB, output1)
-        self.bus.write_byte_data(self.DEVICES[1], self.OLATB, output2)
+        outputs = [int(bin_string[0:8], 2),
+                   int(bin_string[8:16], 2),
+                   int(bin_string[16:24], 2),
+                   int(bin_string[24:32], 2)]
+        for device_index in range(len(self.DEVICES)):
+            self.bus.write_byte_data(self.DEVICES[device_index], self.OLATB, outputs[device_index])
 
     def clear_outputs(self):
-        self.bus.write_byte_data(self.DEVICES[0], self.OLATB, 0xFF)
-        self.bus.write_byte_data(self.DEVICES[1], self.OLATB, 0xFF)
+        for device_index in range(len(self.DEVICES)):
+            self.bus.write_byte_data(self.DEVICES[device_index], self.OLATB, 0xFF)
 
     def fetch_test_file(self, test_number):
-        with open('testdata_'+str(test_number)+'.json') as f:
+        with open('testdata_' + str(test_number) + '.json') as f:
             file_data = json.load(f)
         return file_data
 
@@ -62,5 +64,3 @@ if __name__ == '__main__':
     i2c = I2CReader()
     file = i2c.fetch_test_file('3')
     i2c.run_outputs(file)
-
-
