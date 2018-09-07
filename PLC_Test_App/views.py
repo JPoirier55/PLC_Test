@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
-from PLC_Test_App.models import Test
+from PLC_Test_App.models import *
 
 import json, os
 from PLC_Test_App import apps
@@ -43,17 +43,31 @@ def index(request):
 
 
 def testing(request):
-    t = Test.objects.all()
-    for r in t:
-        print(r.testcase_set.all())
-        for i in r.testcase_set.all():
-            for u in i.testcaseresult_set.all():
-                print(u.test_case)
-                print(u.test_input)
-                print(u.test_case_id)
-            print(i.testcaseresult_set.all())
-            print(i.testcaseinput_set.all())
-    return render(request, 'testing.html', {"obj": t})
+    test_name = request.GET.get('test_name', '')
+    print(test_name)
+    test_case_objs = TestCase.objects.filter(test__name=test_name)
+    test_obj = Test.objects.filter(name=test_name)
+    print(test_obj[0].input_names)
+    test_names = Test.objects.all()
+    test_cases = []
+    for test_case in test_case_objs:
+        input_result = []
+        test_case_input = eval(test_case.input)
+        test_case_result = eval(test_case.result)
+        for input_index in range(len(test_case_input)):
+            input_result.append((eval(test_obj[0].input_names)[input_index], test_case_input[input_index],
+                                 eval(test_obj[0].output_names)[input_index], test_case_result[input_index]))
+        temp_dict = {'test_case_name': test_case.name,
+                     'test': test_name,
+                     'input_result': input_result,
+                     'input_names': test_obj[0].input_names,
+                     'output_names': test_obj[0].output_names}
+        test_cases.append(temp_dict)
+
+    return render(request, 'testing.html', {'test_cases': test_cases,
+                                            'test_names': test_names,
+                                            'chosen': test_name
+                                            })
 
 
 # ------------- API Methods ---------------- #

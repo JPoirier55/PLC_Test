@@ -13,17 +13,52 @@
 
 {% block content %}
 
-    <select class="form-control" style="margin-top:2%;">
-
+    <select id="selector" onchange="reload()" class="form-control" style="margin-top:2%;">
+        {% for test in test_names %}
+            {% if test.name == chosen %}
+                <option id="test.id" selected>{{ test.name }}</option>
+            {% else %}
+                <option id="test.id">{{ test.name }}</option>
+            {% endif %}
+        {% endfor %}
     </select>
+
+    <table>
+        {% for test_case in test_cases %}
+            <tr>
+                <td>
+                    <h2>Test Case:
+                        {{ test_case.test_case_name }}
+                    </h2>
+                </td>
+            </tr>
+            <tr>
+                <th>Input Name</th>
+                <th>Input</th>
+                <th>Output Name</th>
+                <th>Result</th>
+            </tr>
+            {% for input_result in test_case.input_result %}
+                <tr>
+                    <td>{{ input_result.0 }}</td>
+                    <td>{{ input_result.1 }}</td>
+                    <td>{{ input_result.2 }}</td>
+                    <td>{{ input_result.3 }}</td>
+                </tr>
+            {% endfor %}
+
+        {% endfor %}
+    </table>
 
     <div style="margin: 25px;">
         <button onclick="run_test()" type="button" class="btn btn-danger">Run Test</button>
     </div>
 
-    {{ obj }}
-
     <script type="text/javascript">
+        function reload() {
+            test_name = $("#selector").find(":selected").text();
+            window.location.href = "/testing?test_name=" + test_name;
+        }
 
         function run_test() {
             $.ajax({
