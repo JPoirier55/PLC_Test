@@ -67,21 +67,24 @@ def testing(request):
                                             'chosen': test_name
                                             })
 
-def run_test(request):
+
+def test_results(request):
     test_name = request.GET.get('test_name', '')
     test_cases = TestCase.objects.filter(test__name=test_name)
     real_results = []
     expected_results = []
-    inputs = []
+    all_inputs = []
     overall_compare = []
 
     i2c = apps.I2C_OBJ
     for test_case in test_cases:
-        inputs = eval(test_case.input)
-        real = i2c.run_outputs(eval(test_case.input))
+        all_inputs.append(eval(test_case.input))
+        real = i2c.run_outputs(eval(test_case.input), test_case.hold_time)
         expected = eval(test_case.result)
         print("Real: " + str(real))
         print("Expe: " + str(expected))
+        real_results.append(real)
+        expected_results.append(expected)
         compare = []
         for result_index in range(len(real)):
             if real[result_index] == expected[result_index]:
@@ -90,12 +93,12 @@ def run_test(request):
                 compare.append(0)
 
         overall_compare.append(compare)
-        print("comp: "+str(compare))
+        print("comp: " + str(compare))
 
-    return render(request, 'json.dumps({'inputs': inputs,
-                                    'real': real_results,
-                                    'expected': expected_results,
-                                    'compare': overall_compare}))
+    return render(request, 'test_results.html', {'inputs': all_inputs,
+                                                 'real': real_results,
+                                                 'expected': expected_results,
+                                                 'compare': overall_compare})
 
 
 # ------------- API Methods ---------------- #

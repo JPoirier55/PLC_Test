@@ -25,12 +25,6 @@
 
     <div style="margin: 25px;">
         <button onclick="run_test()" type="button" class="btn btn-danger">Run Test</button>
-        <div>Test Results:
-            <p id="test_complete" style="display: none;">
-
-            </p>
-        </div>
-
     </div>
 
     <table>
@@ -70,17 +64,14 @@
 
         function run_test() {
             test_name = $("#selector").find(":selected").text();
-            const div_obj = $("#test_complete");
-            $.ajax({
-                type: "GET",
-                url: "/api/run_test?test_name=" + test_name,
-                success: function (response){
-                    resp = JSON.parse(response);
-
-                    div_obj.text(resp);
-                    div_obj.show();
-                }
-            })
+            window.location.href = "/test_results?test_name=" + test_name;
+            {#$.ajax({#}
+            {#    type: "GET",#}
+            {#    url: "/test_results?test_name=" + test_name,#}
+            {#    success: function (response){#}
+            {##}
+            {#    }#}
+            {#})#}
         }
     </script>
 

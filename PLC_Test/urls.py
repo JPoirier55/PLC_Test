@@ -24,8 +24,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/get_data', views.get_data),
     path('api/set_data', views.set_data),
-    path('api/run_test', views.run_test),
     path('testing', views.testing),
+path('test_results', views.test_results),
     url(r'^$', views.index),
 ]
 # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

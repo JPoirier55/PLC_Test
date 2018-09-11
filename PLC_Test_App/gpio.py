@@ -47,9 +47,9 @@ class I2CReader:
         for device_index in range(len(self.DEVICES)):
             self.bus.write_byte_data(self.DEVICES[device_index], self.OLATB, 0xFF)
 
-    def run_outputs(self, input_arr):
+    def run_outputs(self, input_arr, hold_time):
         self.write_outputs(input_arr)
-        time.sleep(.2)
+        time.sleep(hold_time)
         inputs = self.read_inputs()
         time.sleep(.2)
         self.clear_outputs()

@@ -28,6 +28,7 @@ class Test(models.Model):
 class TestCase(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     name = models.CharField(max_length=30, default="no name test case")
+    hold_time = models.IntegerField(default=1)
     input = models.TextField(default="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]")
     result = models.TextField(default="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]")
 

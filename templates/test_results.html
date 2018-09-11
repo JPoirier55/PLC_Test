@@ -1,10 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "index.html" %}
+{% load static %}
 
-</body>
-</html>
+{% block navbar %}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <div>Testing</div>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block content %}
+<div>{{ inputs }}</div>
+    <div>{{ real }}</div>
+    <div>{{ expected }}</div>
+    <div>{{ compare }}</div>
+
+
+{% endblock %}
