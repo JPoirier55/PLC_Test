@@ -34,6 +34,7 @@ class I2CReader:
         bin_string = ''
         for bn in input_array:
             bin_string += str(bn)
+        print('Running : ' + bin_string)
         outputs = [int(bin_string[0:8], 2),
                    int(bin_string[8:16], 2),
                    int(bin_string[16:24], 2),
@@ -42,25 +43,20 @@ class I2CReader:
             self.bus.write_byte_data(self.DEVICES[device_index], self.OLATB, outputs[device_index])
 
     def clear_outputs(self):
+        print('Clearing')
         for device_index in range(len(self.DEVICES)):
             self.bus.write_byte_data(self.DEVICES[device_index], self.OLATB, 0xFF)
 
-    def fetch_test_file(self, test_number):
-        with open('testdata_' + str(test_number) + '.json') as f:
-            file_data = json.load(f)
-        return file_data
-
-    def run_outputs(self, file_data):
-        for test, input_arr in file_data.items():
-            print('Running Test ' + str(test))
-            print(input_arr)
-            self.write_outputs(input_arr)
-            time.sleep(.2)
-            self.clear_outputs()
-            time.sleep(.2)
+    def run_outputs(self, input_arr):
+        self.write_outputs(input_arr)
+        time.sleep(.2)
+        inputs = self.read_inputs()
+        time.sleep(.2)
+        self.clear_outputs()
+        time.sleep(.2)
+        return inputs
 
 
 if __name__ == '__main__':
     i2c = I2CReader()
-    file = i2c.fetch_test_file('3')
-    i2c.run_outputs(file)
+    i2c.run_outputs([])

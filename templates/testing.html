@@ -23,6 +23,16 @@
         {% endfor %}
     </select>
 
+    <div style="margin: 25px;">
+        <button onclick="run_test()" type="button" class="btn btn-danger">Run Test</button>
+        <div>Test Results:
+            <p id="test_complete" style="display: none;">
+
+            </p>
+        </div>
+
+    </div>
+
     <table>
         {% for test_case in test_cases %}
             <tr>
@@ -32,27 +42,25 @@
                     </h2>
                 </td>
             </tr>
-            <tr>
-                <th>Input Name</th>
-                <th>Input</th>
-                <th>Output Name</th>
-                <th>Result</th>
-            </tr>
-            {% for input_result in test_case.input_result %}
-                <tr>
-                    <td>{{ input_result.0 }}</td>
-                    <td>{{ input_result.1 }}</td>
-                    <td>{{ input_result.2 }}</td>
-                    <td>{{ input_result.3 }}</td>
-                </tr>
-            {% endfor %}
+{#            <tr>#}
+{#                <th>Input Name</th>#}
+{#                <th>Input</th>#}
+{#                <th>Output Name</th>#}
+{#                <th>Result</th>#}
+{#            </tr>#}
+{#            {% for input_result in test_case.input_result %}#}
+{#                <tr>#}
+{#                    <td>{{ input_result.0 }}</td>#}
+{#                    <td>{{ input_result.1 }}</td>#}
+{#                    <td>{{ input_result.2 }}</td>#}
+{#                    <td>{{ input_result.3 }}</td>#}
+{#                </tr>#}
+{#            {% endfor %}#}
 
         {% endfor %}
     </table>
 
-    <div style="margin: 25px;">
-        <button onclick="run_test()" type="button" class="btn btn-danger">Run Test</button>
-    </div>
+
 
     <script type="text/javascript">
         function reload() {
@@ -61,11 +69,16 @@
         }
 
         function run_test() {
+            test_name = $("#selector").find(":selected").text();
+            const div_obj = $("#test_complete");
             $.ajax({
                 type: "GET",
-                url: "/api/run_test",
-                success: function (response) {
-                    console.log(response);
+                url: "/api/run_test?test_name=" + test_name,
+                success: function (response){
+                    resp = JSON.parse(response);
+
+                    div_obj.text(resp);
+                    div_obj.show();
                 }
             })
         }

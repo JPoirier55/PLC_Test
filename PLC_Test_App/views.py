@@ -44,10 +44,8 @@ def index(request):
 
 def testing(request):
     test_name = request.GET.get('test_name', '')
-    print(test_name)
     test_case_objs = TestCase.objects.filter(test__name=test_name)
     test_obj = Test.objects.filter(name=test_name)
-    print(test_obj[0].input_names)
     test_names = Test.objects.all()
     test_cases = []
     for test_case in test_case_objs:
@@ -68,6 +66,36 @@ def testing(request):
                                             'test_names': test_names,
                                             'chosen': test_name
                                             })
+
+def run_test(request):
+    test_name = request.GET.get('test_name', '')
+    test_cases = TestCase.objects.filter(test__name=test_name)
+    real_results = []
+    expected_results = []
+    inputs = []
+    overall_compare = []
+
+    i2c = apps.I2C_OBJ
+    for test_case in test_cases:
+        inputs = eval(test_case.input)
+        real = i2c.run_outputs(eval(test_case.input))
+        expected = eval(test_case.result)
+        print("Real: " + str(real))
+        print("Expe: " + str(expected))
+        compare = []
+        for result_index in range(len(real)):
+            if real[result_index] == expected[result_index]:
+                compare.append(1)
+            else:
+                compare.append(0)
+
+        overall_compare.append(compare)
+        print("comp: "+str(compare))
+
+    return render(request, 'json.dumps({'inputs': inputs,
+                                    'real': real_results,
+                                    'expected': expected_results,
+                                    'compare': overall_compare}))
 
 
 # ------------- API Methods ---------------- #
@@ -90,11 +118,3 @@ def set_data(request):
     i2c = apps.I2C_OBJ
     i2c.write_outputs(set_arr)
     return HttpResponse(set_arr)
-
-
-def run_test(request):
-    i2c = apps.I2C_OBJ
-    test_file = i2c.fetch_test_file('3')
-    i2c.run_outputs(test_file)
-    arr = i2c.read_inputs()
-    return HttpResponse("complete")
