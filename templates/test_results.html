@@ -12,10 +12,46 @@
 {% endblock %}
 
 {% block content %}
-<div>{{ inputs }}</div>
-    <div>{{ real }}</div>
-    <div>{{ expected }}</div>
-    <div>{{ compare }}</div>
 
+    <div class="container">
+        <h2>{{ test_name }}</h2>
+        <p>Choose a test case below.</p>
+
+        <ul class="nav nav-tabs">
+            {% for result_arr in result %}
+                <li class="active" style="padding: 10px;">
+                    <a data-toggle="tab" href="#{{ result_arr.1.0.test_case_name }}">
+                        {{ result_arr.1.0.test_case_name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="tab-content">
+            {% for result_arr in result %}
+                <div id="{{ result_arr.1.0.test_case_name }}" class="tab-pane fade in active">
+                    <h3>{{ result_arr.1.0.test_case_name }}</h3>
+                {% if result_arr.0  %}
+                    <h3>Failed</h3>
+                    {% else %}
+                    <h3>Passed</h3>
+                {% endif %}
+                    {% for test_result in result_arr.1 %}
+                        {% if test_result.compare == 1 %}
+                            <div align="center" class="bg-success text-light" style="padding: 2px; margin: 0 20%;border-bottom: 1px solid white;">
+                                #{{ test_result.output_num }} - Output Name: {{ test_result.output_name }}
+                                <p>Pass</p>
+                            </div>
+                        {% else %}
+                            <div align="center" class="bg-danger text-light" style="padding: 2px; margin: 0 20%; border-bottom: 1px solid white;">
+                                #{{ test_result.output_num }} - Output Name: {{ test_result.output_name }}
+                                <p>Fail</p>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 
 {% endblock %}

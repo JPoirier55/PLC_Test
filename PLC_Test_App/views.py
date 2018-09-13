@@ -71,34 +71,42 @@ def testing(request):
 def test_results(request):
     test_name = request.GET.get('test_name', '')
     test_cases = TestCase.objects.filter(test__name=test_name)
-    real_results = []
-    expected_results = []
-    all_inputs = []
-    overall_compare = []
-
+    test_obj = Test.objects.get(name=test_name)
+    input_names = eval(test_obj.input_names)
+    output_names = eval(test_obj.output_names)
+    overall_results = []
     i2c = apps.I2C_OBJ
+    fail_count = 0
     for test_case in test_cases:
-        all_inputs.append(eval(test_case.input))
         real = i2c.run_outputs(eval(test_case.input), test_case.hold_time)
         expected = eval(test_case.result)
-        print("Real: " + str(real))
-        print("Expe: " + str(expected))
-        real_results.append(real)
-        expected_results.append(expected)
         compare = []
+        result_arr = []
         for result_index in range(len(real)):
             if real[result_index] == expected[result_index]:
                 compare.append(1)
+                match = 1
             else:
                 compare.append(0)
+                match = 0
+                fail_count += 1
+            result_arr.append({'output_num': result_index,
+                               'input': eval(test_case.input)[result_index],
+                               'expected': expected[result_index],
+                               'real': real[result_index],
+                               'compare': match,
+                               'test_case_name': test_case.name,
+                               'input_name': input_names[result_index],
+                               'output_name': output_names[result_index]})
+        if fail_count > 0:
+            failed = True
+        else:
+            failed = False
+        overall_results.append((failed, result_arr))
 
-        overall_compare.append(compare)
-        print("comp: " + str(compare))
-
-    return render(request, 'test_results.html', {'inputs': all_inputs,
-                                                 'real': real_results,
-                                                 'expected': expected_results,
-                                                 'compare': overall_compare})
+    return render(request, 'test_results.html', {'result': overall_results,
+                                                 'test_cases': test_cases,
+                                                 'test_name': test_name})
 
 
 # ------------- API Methods ---------------- #
