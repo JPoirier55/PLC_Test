@@ -36,21 +36,6 @@
                     </h2>
                 </td>
             </tr>
-{#            <tr>#}
-{#                <th>Input Name</th>#}
-{#                <th>Input</th>#}
-{#                <th>Output Name</th>#}
-{#                <th>Result</th>#}
-{#            </tr>#}
-{#            {% for input_result in test_case.input_result %}#}
-{#                <tr>#}
-{#                    <td>{{ input_result.0 }}</td>#}
-{#                    <td>{{ input_result.1 }}</td>#}
-{#                    <td>{{ input_result.2 }}</td>#}
-{#                    <td>{{ input_result.3 }}</td>#}
-{#                </tr>#}
-{#            {% endfor %}#}
-
         {% endfor %}
     </table>
 
@@ -65,13 +50,6 @@
         function run_test() {
             test_name = $("#selector").find(":selected").text();
             window.location.href = "/test_results?test_name=" + test_name;
-            {#$.ajax({#}
-            {#    type: "GET",#}
-            {#    url: "/test_results?test_name=" + test_name,#}
-            {#    success: function (response){#}
-            {##}
-            {#    }#}
-            {#})#}
         }
     </script>
 

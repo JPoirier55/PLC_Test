@@ -1,29 +1,14 @@
 {% extends "index.html" %}
 {% load static %}
 
-{% block navbar %}
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto" >
-            <li class="nav-item">
-                <button onclick="start_polling(1)" type="button" class="btn btn-info">Start Polling</button>
-            </li>
-            <li class="nav-item">
-                <button onclick="stop_polling(0)" type="button" class="btn btn-danger">Stop Polling</button>
-            </li>
-            <li class="nav-item">
-                <div id="polling_div">Polling</div>
-            </li>
-        </ul>
-    </div>
-{% endblock %}
-
 {% block content %}
 
-    <div style="margin: 25px;">
-        <button onclick="run_test()" type="button" class="btn btn-danger">Run Test</button>
-    </div>
-
     <table class="container-fluid">
+    <div style="margin: 10px;">
+        <button onclick="start_polling(1)" type="button" class="btn btn-info">Start Polling</button>
+        <button onclick="stop_polling(0)" type="button" class="btn btn-danger">Stop Polling</button>
+        <div id="polling_div">Polling</div>
+    </div>
         <tr>
             <th>Inputs</th>
             {% for input_name in input_name_list %}

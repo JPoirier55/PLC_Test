@@ -1,16 +1,6 @@
 {% extends "index.html" %}
 {% load static %}
 
-{% block navbar %}
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <div>Testing</div>
-            </li>
-        </ul>
-    </div>
-{% endblock %}
-
 {% block content %}
 
     <div class="container">
@@ -20,8 +10,8 @@
         <ul class="nav nav-tabs">
             {% for result_arr in result %}
                 <li class="active" style="padding: 10px;">
-                    <a data-toggle="tab" href="#{{ result_arr.1.0.test_case_name }}">
-                        {{ result_arr.1.0.test_case_name }}
+                    <a data-toggle="tab" href="#{{ result_arr.result_dicts.0.test_case_name }}">
+                        {{ result_arr.result_dicts.0.test_case_name }}
                     </a>
                 </li>
             {% endfor %}
@@ -29,14 +19,16 @@
 
         <div class="tab-content">
             {% for result_arr in result %}
-                <div id="{{ result_arr.1.0.test_case_name }}" class="tab-pane fade in active">
-                    <h3>{{ result_arr.1.0.test_case_name }}</h3>
-                {% if result_arr.0  %}
+                <div id="{{ result_arr.result_dicts.0.test_case_name }}" class="tab-pane fade in active">
+                    <h3>{{ result_arr.result_dicts.0.test_case_name }}</h3>
+                {% if result_arr.failed  %}
                     <h3>Failed</h3>
+                    <h3>Number of Failures: {{ result_arr.failed_num }}</h3>
                     {% else %}
                     <h3>Passed</h3>
+
                 {% endif %}
-                    {% for test_result in result_arr.1 %}
+                    {% for test_result in result_arr.result_dicts %}
                         {% if test_result.compare == 1 %}
                             <div align="center" class="bg-success text-light" style="padding: 2px; margin: 0 20%;border-bottom: 1px solid white;">
                                 #{{ test_result.output_num }} - Output Name: {{ test_result.output_name }}
