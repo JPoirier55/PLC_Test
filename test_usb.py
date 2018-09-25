@@ -31,6 +31,15 @@ def run_test():
 
 
 if __name__ == "__main__":
+    import xlrd
+    book = xlrd.open_workbook('PLC_Test_App/test_1.xlsx')
+
+    header = []
+
+    sheet = book.sheets()[0]
+    for row_num, row in enumerate(sheet.get_rows()):
+        if row_num <= 0:
+            print(row)  # Print out the header
     # t = [0, 0, 0, 0, 2, 0, 0, 4,
     #      9, 0, 0, 0, 0, 0, 0, 6,
     #      89, 0, 0, 0, 0, 0, 0, 7,
@@ -67,10 +76,10 @@ if __name__ == "__main__":
 
 
     # d = {}
-    for i in range(35):
-        if i < 10:
-            print('\'Output '+str(i)+'\',', end="")
-        else:
-            print('\'Output '+str(i) + '\',', end="")
+    # for i in range(35):
+    #     if i < 10:
+    #         print('\'Output '+str(i)+'\',', end="")
+    #     else:
+    #         print('\'Output '+str(i) + '\',', end="")
         # d['output_'+str(i)] = 0
     # print(json.dumps(d))

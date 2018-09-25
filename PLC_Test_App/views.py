@@ -4,6 +4,7 @@ from PLC_Test_App.models import *
 
 import json, os
 from PLC_Test_App import apps
+import PLC_Test_App.model_controller as model_controller
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -109,3 +110,8 @@ def set_data(request):
     i2c = apps.I2C_OBJ
     i2c.write_outputs(set_arr)
     return HttpResponse(set_arr)
+
+
+def new_test(request):
+    query = model_controller.new_test()
+    return HttpResponse(query)
