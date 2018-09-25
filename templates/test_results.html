@@ -19,14 +19,13 @@
 
         <div class="tab-content">
             {% for result_arr in result %}
-                <div id="{{ result_arr.result_dicts.0.test_case_name }}" class="tab-pane fade in active">
+                <div align="center" id="{{ result_arr.result_dicts.0.test_case_name }}" class="tab-pane fade in active">
                     <h3>{{ result_arr.result_dicts.0.test_case_name }}</h3>
                 {% if result_arr.failed  %}
-                    <h3>Failed</h3>
+                    <h3>FAILED</h3>
                     <h3>Number of Failures: {{ result_arr.failed_num }}</h3>
                     {% else %}
-                    <h3>Passed</h3>
-
+                    <h3>PASSED</h3>
                 {% endif %}
                     {% for test_result in result_arr.result_dicts %}
                         {% if test_result.compare == 1 %}
