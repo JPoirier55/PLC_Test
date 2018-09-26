@@ -37,9 +37,41 @@ if __name__ == "__main__":
     header = []
 
     sheet = book.sheets()[0]
+    num_test_cases = 0
+    hold_times = []
+    input_names = []
+    output_names = []
+    inputs = []
+    expected_outputs = []
     for row_num, row in enumerate(sheet.get_rows()):
         if row_num <= 0:
             print(row)  # Print out the header
+        elif row_num == 1:
+            test_name = row[0].value
+            plc_type = row[1].value
+            num_test_cases = int(row[2].value)
+            for test_case_index in range(num_test_cases):
+                hold_times.append(row[test_case_index + 3].value)
+            print(test_name)
+            print(plc_type)
+            print(hold_times)
+        elif row_num == 2:
+            print(row)
+        elif row_num > 2:
+            input_names.append(row[0].value)
+            output_names.append(row[1].value)
+            input_case = []
+            output_case = []
+            for test_case_index in range(len(hold_times)):
+                input_case.append(row[test_case_index + 2].value)
+                output_case.append(row[test_case_index + 2].value)
+            inputs.append(input_case)
+            expected_outputs.append(output_case)
+    print(input_names)
+    print(output_names)
+    print(inputs)
+    print(expected_outputs)
+
     # t = [0, 0, 0, 0, 2, 0, 0, 4,
     #      9, 0, 0, 0, 0, 0, 0, 6,
     #      89, 0, 0, 0, 0, 0, 0, 7,
