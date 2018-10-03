@@ -1,0 +1,37 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/jquery.json-viewer.css" %}">
+    <script type="text/javascript" src="{% static "js/jquery.json-viewer.js" %}"></script>
+
+    <div class="container">
+        <div style="margin: 25px;">
+            <h2>File Upload</h2>
+            <p>Upload test file built from template</p>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="myfile">
+                <button type="submit">Upload</button>
+            </form>
+
+            {% if uploaded_file_url %}
+                <p>File uploaded at: {{ uploaded_file_url }}</p>
+                {% if valid == "OK"%}
+                    <p class="bg-success">OK</p>
+                    {% else %}
+                    <p class="bg-danger">FAIL</p>
+                    {% endif %}
+                <pre id="json-viewer"></pre>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <script>
+    $('#json-viewer').jsonViewer({{ data|safe }}, {collapsed:true});
+
+    </script>
+
+{% endblock %}

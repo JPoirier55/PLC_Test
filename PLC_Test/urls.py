@@ -17,8 +17,6 @@ from django.contrib import admin
 from django.conf.urls import url
 from django.urls import path
 from PLC_Test_App import views
-from django.conf import settings
-from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,7 +25,7 @@ urlpatterns = [
     path('api/new_test', views.new_test),
     path('testing', views.testing),
     path('test_results', views.test_results),
-
+    path('upload', views.upload),
     url(r'^$', views.index),
 ]
 # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

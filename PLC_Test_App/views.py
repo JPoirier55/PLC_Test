@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from PLC_Test_App.models import *
+from django.core.files.storage import FileSystemStorage
 
 import json, os
 from PLC_Test_App import apps
 import PLC_Test_App.model_controller as model_controller
+from PLC_Test_App import test_utils
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -90,6 +92,29 @@ def test_results(request):
                                                  'test_name': test_name})
 
 
+def upload(request):
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save('/home/pi/python_PLC_tester/PLC_Test/PLC_Test_App/plc_tests/' + myfile.name, myfile)
+        uploaded_file_url = fs.url(filename)
+        valid, data = test_utils.validate_import('/home/pi/python_PLC_tester/PLC_Test/PLC_Test_App/plc_tests/' + myfile.name)
+        if valid == 'OK':
+
+            return render(request, 'upload.html', {
+                'uploaded_file_url': uploaded_file_url,
+                'valid': valid,
+                'data': data
+            })
+        else:
+            fs.delete(filename)
+            return render(request, 'upload.html', {
+                'uploaded_file_url': uploaded_file_url,
+                'valid': valid
+            })
+    return render(request, 'upload.html')
+
+
 # ------------- API Methods ---------------- #
 
 
@@ -115,3 +140,5 @@ def set_data(request):
 def new_test(request):
     query = model_controller.new_test()
     return HttpResponse(query)
+
+
