@@ -92,6 +92,15 @@ def test_results(request):
                                                  'test_name': test_name})
 
 
+def test_delete(request):
+    test_name = request.GET.get('test_name', '')
+    if test_name != '':
+        msg = model_controller.delete_test(test_name)
+    else:
+        return render(request, 'test_delete.html', {'message': 'Cannot delete test'})
+    return render(request, 'test_delete.html', {'message': test_name + ' was successfully deleted: ' + msg})
+
+
 def upload(request):
     if request.method == 'POST' and request.FILES['myfile']:
         myfile = request.FILES['myfile']
@@ -99,12 +108,20 @@ def upload(request):
         filename = fs.save('/home/pi/python_PLC_tester/PLC_Test/PLC_Test_App/plc_tests/' + myfile.name, myfile)
         uploaded_file_url = fs.url(filename)
         valid, data = test_utils.validate_import('/home/pi/python_PLC_tester/PLC_Test/PLC_Test_App/plc_tests/' + myfile.name)
+        print(data)
         if valid == 'OK':
-
+            output_names = data['output_names']
+            input_names = data['input_names']
+            test_cases = data['test_cases']
+            name = myfile.name.split('.')[0]
+            print(name)
+            print(output_names, input_names, test_cases)
+            new_list = model_controller.new_test_xlsx(name, input_names, output_names, test_cases)
             return render(request, 'upload.html', {
                 'uploaded_file_url': uploaded_file_url,
                 'valid': valid,
-                'data': data
+                'data': json.dumps(data),
+                'new_list': [item for item in new_list]
             })
         else:
             fs.delete(filename)

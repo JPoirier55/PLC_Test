@@ -17,14 +17,19 @@
             </form>
 
             {% if uploaded_file_url %}
-                <p>File uploaded at: {{ uploaded_file_url }}</p>
                 {% if valid == "OK"%}
+                    <p>File uploaded at: {{ uploaded_file_url }}</p>
                     <p class="bg-success">OK</p>
+                    <pre id="json-viewer"></pre>
+                    <div>
+                        <h3>Current Test Cases: </h3>{{ new_list }}
+                    </div>
                     {% else %}
                     <p class="bg-danger">FAIL</p>
+                    <p>Could not upload file: {{ uploaded_file_url }}</p>
                     {% endif %}
-                <pre id="json-viewer"></pre>
             {% endif %}
+
         </div>
 
     </div>

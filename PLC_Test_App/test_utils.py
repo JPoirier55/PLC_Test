@@ -45,4 +45,4 @@ def validate_import(filename):
     except Exception as e:
         return "Validation Error: " + str(e) + " at row number: " + str(row_num), None
 
-    return 'OK', json.dumps(test_dict)
+    return 'OK', test_dict

@@ -25,6 +25,7 @@ urlpatterns = [
     path('api/new_test', views.new_test),
     path('testing', views.testing),
     path('test_results', views.test_results),
+    path('test_delete', views.test_delete),
     path('upload', views.upload),
     url(r'^$', views.index),
 ]

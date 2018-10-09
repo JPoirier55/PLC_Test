@@ -24,7 +24,8 @@
     </select>
 
     <div style="margin: 25px;">
-        <button onclick="run_test()" type="button" class="btn btn-danger">Run Test</button>
+        <button onclick="run_test()" type="button" class="btn btn-success">Run Test</button>
+    <button onclick="delete_test()" type="button" class="btn btn-danger">Delete Test</button>
     </div>
 
     <table>
@@ -50,6 +51,11 @@
         function run_test() {
             test_name = $("#selector").find(":selected").text();
             window.location.href = "/test_results?test_name=" + test_name;
+        }
+
+        function delete_test() {
+            test_name = $("#selector").find(":selected").text();
+            window.location.href = "/test_delete?test_name=" + test_name;
         }
     </script>
 

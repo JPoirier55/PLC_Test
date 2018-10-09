@@ -34,20 +34,3 @@ class TestCase(models.Model):
 
     def __str__(self):
         return 'Test Case: ' + str(self.id) + ' name: ' + self.name
-
-#
-# class TestCaseInput(models.Model):
-#     test_case = models.ForeignKey(TestCase, on_delete=models.CASCADE)
-#
-#
-#     def __str__(self):
-#         return 'ID: ' + str(self.id) + ' Test Case: ' + str(self.test_case.id) + " Test: " + self.test_case.test.name
-#
-#
-# class TestCaseResult(models.Model):
-#     test_case = models.ForeignKey(TestCase, on_delete=models.CASCADE)
-#     test_input = models.ForeignKey(TestCaseInput, on_delete=models.CASCADE)
-#
-#
-#     def __str__(self):
-#         return 'ID: ' + str(self.id) + ' Test Case: ' + str(self.test_case.id) + " Test: " + self.test_case.test.name

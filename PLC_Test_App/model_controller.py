@@ -18,16 +18,20 @@ def new_test(name, input_names, output_names):
     return Test.objects.values_list('name', flat=True)
 
 
-def new_test_xlsx(name, file_name):
-    book = xlrd.open_workbook('test_1.xlsx')
+def delete_test(name):
+    Test.objects.filter(name=name).delete()
+    return "Deleted Test: " + name
 
-    header = []
 
-    sheet = book.sheets()[0]
-    for row_num, row in enumerate(sheet.get_rows()):
-        if row_num <= 0:
-            print(row)  # Print out the header
+def new_test_xlsx(name, input_names, output_names, test_cases):
+    names = Test.objects.filter(name=name)
+    if len(names) >= 1:
+        name = name + "_" + str(len(names))
+    test = Test.objects.create(name=name, input_names=input_names, output_names=output_names)
+    test.save()
+    for test_case_obj in test_cases:
+        test_case = TestCase.objects.create(test=test, name=test_case_obj['name'], hold_time=test_case_obj['hold_time'],
+                                            input=test_case_obj['inputs'], result=test_case_obj['outputs'])
+        test_case.save()
 
-    p = Test.objects.create(name=name, input_names=input_names, output_names=output_names)
-    p.save()
     return Test.objects.values_list('name', flat=True)

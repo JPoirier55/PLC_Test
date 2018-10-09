@@ -1,0 +1,15 @@
+{% extends "index.html" %}
+{% load static %}
+
+{% block content %}
+
+
+    <div style="margin: 25px;">
+    {{ message }}
+        <form action="/testing">
+            <button type="submit" class="btn btn-success">Back</button>
+        </form>
+
+    </div>
+
+{% endblock %}
